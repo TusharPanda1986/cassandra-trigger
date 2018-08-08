@@ -1,3 +1,5 @@
+This project was forked off from [here](https://github.com/felipead/cassandra-logger). Thanks to [felipead](https://github.com/felipead) for his contributions to opensource community
+
 CASSANDRA TRIGGER
 ================
 [![Build Status](https://api.travis-ci.org/TusharPanda1986/cassandra-trigger.svg)](https://travis-ci.org/TusharPanda1986/cassandra-trigger)
