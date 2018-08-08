@@ -1,0 +1,16 @@
+language: java
+
+jdk:
+  - oraclejdk7
+  - oraclejdk8
+
+script: gradle jar
+
+branches:
+  only:
+    - master
+
+addons:
+  artifacts:
+    paths: 
+      - ./build/libs/cassandra-trigger-0.1.jar

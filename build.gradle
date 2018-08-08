@@ -1,0 +1,45 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+
+version = '0.2'
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    provided
+    compile.extendsFrom provided
+}
+
+dependencies {
+    provided 'org.apache.cassandra:cassandra-all:3.11.2'
+    provided 'org.slf4j:slf4j-api:1.7.25'
+    provided 'org.apache.commons:commons-lang3:3.7'
+
+    compile 'com.datastax.cassandra:cassandra-driver-core:3.5.1'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.hamcrest:hamcrest-all:1.3'
+}
+
+test {
+    exclude '**/LogEntryStoreIntegrationTest.class'
+}
+
+jar {
+    dependsOn configurations.runtime
+    from {
+        (configurations.runtime - configurations.provided).collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    } {
+        exclude "META-INF/*.SF"
+        exclude "META-INF/*.DSA"
+        exclude "META-INF/*.RSA"
+    }
+
+    manifest {
+        attributes 'Built-By': 'Tushar Panda', 'Implementation-Title': 'Cassandra Trigger', 'Implementation-Version': version
+    }
+}

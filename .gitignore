@@ -1,0 +1,17 @@
+*.class
+
+# Package Files
+*.jar
+*.war
+*.ear
+
+# Gradle
+.gradle/
+/build/
+
+# Intellij IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+/bin/
