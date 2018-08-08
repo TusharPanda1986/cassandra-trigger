@@ -1,4 +1,4 @@
-CASSANDRA LOGGER
+CASSANDRA TRIGGER
 ================
 [![Build Status](https://api.travis-ci.org/TusharPanda1986/cassandra-trigger.svg)](https://travis-ci.org/TusharPanda1986/cassandra-trigger)
 
