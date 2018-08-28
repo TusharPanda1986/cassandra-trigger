@@ -13,7 +13,7 @@ public class SettingsProviderTest {
 	@Test
 	public void loadDefaultSettingsIfUserSettingsFileNotFound() {
 		Settings settings = SettingsProvider.getSettings();
-		assertThat(settings.getLogKeyspace(), is("product_v2_dev"));
-		assertThat(settings.getLogTable(), is("product_by_timestamps"));
+		assertThat(settings.getLogKeyspace(), is("product_v2"));
+		assertThat(settings.getLogTable(), is("product_by_maps"));
 	}
 }

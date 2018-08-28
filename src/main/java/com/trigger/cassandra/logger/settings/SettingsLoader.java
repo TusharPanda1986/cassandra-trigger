@@ -3,9 +3,7 @@ package com.trigger.cassandra.logger.settings;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashSet;
 import java.util.Properties;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -13,9 +11,9 @@ public class SettingsLoader {
 
 	private static final String DEFAULT_PORT = "9042";
 	private static final String DEFAULT_CREDS = "cassandra";
-	private static final String DEFAULT_HOST = "localhost";
-	private static final String DEFAULT_LOG_KEYSPACE = "product_v2_dev";
-	private static final String DEFAULT_LOG_TABLE = "product_by_timestamps";
+	private static final String DEFAULT_HOST = "127.0.0.1";
+	private static final String DEFAULT_LOG_KEYSPACE = "product_v2";
+	private static final String DEFAULT_LOG_TABLE = "product_by_maps";
 
 	public static Settings load(String fileName) throws IOException {
 		Properties properties = loadPropertiesFromClassPath(fileName);
@@ -42,20 +40,6 @@ public class SettingsLoader {
 		}
 
 		return properties;
-	}
-
-	private static Set<String> splitByComma(String string) {
-		String[] tokens = StringUtils.split(string, ",");
-		Set<String> normalizedTokens = new HashSet<>();
-		if (tokens != null) {
-			for (String token : tokens) {
-				token = normalize(token);
-				if (!token.isEmpty()) {
-					normalizedTokens.add(token);
-				}
-			}
-		}
-		return normalizedTokens;
 	}
 
 	private static String normalize(String value) {

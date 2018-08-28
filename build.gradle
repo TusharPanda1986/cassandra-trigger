@@ -1,7 +1,10 @@
 apply plugin: 'java'
+apply plugin: 'maven'
 apply plugin: 'idea'
 
-version = '0.2'
+version = '0.1'
+group = 'com.trigger.cassandra'
+
 
 repositories {
     mavenCentral()
@@ -16,6 +19,7 @@ dependencies {
     provided 'org.apache.cassandra:cassandra-all:3.11.2'
     provided 'org.slf4j:slf4j-api:1.7.25'
     provided 'org.apache.commons:commons-lang3:3.7'
+    provided 'com.fasterxml.jackson.core:jackson-core:2.9.6'
 
     compile 'com.datastax.cassandra:cassandra-driver-core:3.5.1'
 

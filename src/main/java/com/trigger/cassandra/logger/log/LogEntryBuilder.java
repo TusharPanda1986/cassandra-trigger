@@ -11,21 +11,24 @@ import org.apache.cassandra.db.rows.Cell;
 import org.apache.cassandra.db.rows.Row;
 import org.apache.cassandra.db.rows.Unfiltered;
 import org.apache.cassandra.db.rows.UnfilteredRowIterator;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LogEntryBuilder {
 
 	private static final Logger logger = LoggerFactory.getLogger("LogEntryBuilder");
-	
+
 	public LogEntry build(Partition update) {
 		LogEntry logEntry = new LogEntry();
 
 		logEntry.setWriteDate(getCurrentDate());
+		logEntry.setKeyspaceName(update.metadata().ksName);
+		logEntry.setTableName(update.metadata().cfName);
 		logEntry.setPartitionKey(update.metadata().getKeyValidator().getString(update.partitionKey().getKey()));
 
 		try {
-			
+
 			UnfilteredRowIterator it = update.unfilteredIterator();
 			while (it.hasNext()) {
 				Unfiltered un = it.next();
@@ -55,7 +58,7 @@ public class LogEntryBuilder {
 		case ROW:
 			Row row = (Row) unfiltered;
 
-			if (!row.deletion().isLive()) {
+			if (row.deletion() != null && !row.deletion().isLive()) {
 				logEntry.setOperation(Operation.delete);
 			}
 
@@ -78,13 +81,16 @@ public class LogEntryBuilder {
 
 	}
 
-	private void populateLogEntries(LogEntry logEntry, String column, byte[] byteStream) {
-		String value = new String(byteStream);
+	private void populateLogEntries(LogEntry logEntry, String column, byte[] cellValue) {
+		String value = new String(cellValue);
 		logger.debug(
 				String.format("Column being processed : %s  and the corresponding value : %s ", column, value));
 		switch (column.trim().toLowerCase()) {
-		case "clientproduct_id":
-			logEntry.setClientProductId(value);
+		case "division_ids":
+
+			if (StringUtils.isNotBlank(value)) {
+				logEntry.setDivisionIds(value);
+			}
 			break;
 
 		default:

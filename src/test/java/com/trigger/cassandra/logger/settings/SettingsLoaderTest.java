@@ -23,14 +23,14 @@ public class SettingsLoaderTest {
 	public void useDefaultLogTableIfNotProvidedInSettingsFile() throws IOException {
 		Settings settings = SettingsLoader
 				.load("com/trigger/cassandra/logger/settings/SettingsWithoutLogTable.properties");
-		assertThat(settings.getLogTable(), is("product_by_timestamps"));
+		assertThat(settings.getLogTable(), is("product_by_maps"));
 	}
 
 	@Test
 	public void useDefaultLogKeyspaceIfNotProvidedInSettingsFile() throws IOException {
 		Settings settings = SettingsLoader
 				.load("com/trigger/cassandra/logger/settings/SettingsWithoutLogKeyspace.properties");
-		assertThat(settings.getLogKeyspace(), is("product_v2_dev"));
+		assertThat(settings.getLogKeyspace(), is("product_v2"));
 	}
 
 	@Test(expected = IOException.class)

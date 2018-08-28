@@ -1,55 +1,55 @@
 package com.trigger.cassandra.logger.log;
 
+import java.util.Date;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class LogEntry {
+public class MapEntry {
 
 	private String writeDate;
+	private Date writeTime;
 	private String keyspaceName = "ks";
 	private String tableName = "ts";
 	private String partitionKey;
 	private Operation operation = Operation.delete;
 	private String divisionIds;
 	private String clusteringKey = "NA";
+	private String changedValues;
+	private String effectiveDate = "NA";
 
 	@Override
 	public String toString() {
 		ToStringBuilder builder = new ToStringBuilder(this);
 		builder.append("writeDate", getWriteDate());
+		builder.append("writeTime", getWriteTime());
 		builder.append("keyspaceName", getKeyspaceName());
 		builder.append("tableName", getTableName());
 		builder.append("partitionKey", getPartitionKey());
 		builder.append("operation", getOperation().name());
 		builder.append("divisionIds", getDivisionIds());
 		builder.append("clusteringKey", getClusteringKey());
+		builder.append("changedValues", getChangedValues());
+		builder.append("effectiveDate", getEffectiveDate());
 		return builder.build();
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (o == null || !(o instanceof LogEntry)) {
+		if (o == null || !(o instanceof MapEntry)) {
 			return false;
 		}
 
-		LogEntry other = (LogEntry) o;
+		MapEntry other = (MapEntry) o;
 		return Objects.equals(this.writeDate, other.writeDate) && Objects.equals(this.keyspaceName, other.keyspaceName)
-				&& Objects.equals(this.tableName, other.tableName)
-				&& Objects.equals(this.partitionKey, other.partitionKey);
+				&& Objects.equals(this.tableName, other.tableName) && Objects.equals(this.writeTime, other.writeTime)
+				&& Objects.equals(this.partitionKey.hashCode(), other.partitionKey.hashCode())
+				&& Objects.equals(this.effectiveDate, other.effectiveDate);
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((writeDate == null) ? 0 : writeDate.hashCode());
-		result = prime * result + ((keyspaceName == null) ? 0 : keyspaceName.hashCode());
-		result = prime * result + ((tableName == null) ? 0 : tableName.hashCode());
-		result = prime * result + ((partitionKey == null) ? 0 : partitionKey.hashCode());
-		result = prime * result + ((operation == null) ? 0 : operation.hashCode());
-		return result;
+	public String getHashCode() {
+		return this.partitionKey.hashCode() + "" + this.effectiveDate.hashCode();
 	}
 
 	public String getWriteDate() {
@@ -112,5 +112,31 @@ public class LogEntry {
 
 	public String getClusteringKey() {
 		return clusteringKey;
+	}
+
+	public Date getWriteTime() {
+		return writeTime;
+	}
+
+	public void setWriteTime(Date writeTime) {
+		this.writeTime = writeTime;
+	}
+
+	public String getChangedValues() {
+		return changedValues;
+	}
+
+	public void setChangedValues(String changedValues) {
+		this.changedValues = changedValues;
+	}
+
+	public String getEffectiveDate() {
+		return effectiveDate;
+	}
+
+	public void setEffectiveDate(String effectiveDate) {
+		if (StringUtils.isNotBlank(effectiveDate)) {
+			this.effectiveDate = effectiveDate;
+		}
 	}
 }
