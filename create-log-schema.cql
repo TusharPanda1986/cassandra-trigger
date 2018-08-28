@@ -2,7 +2,7 @@
  * 
  *    {CASSANDRA_HOME}/bin/cqlsh --file create-log-schema.cql
  *
- * It will create a table "product_by_timestamps" on keyspace "logger".
+ * It will create a table "product_by_maps" on keyspace "product_v2".
  * If you want to customize these names, you also need to edit cassandra-logger.properties on {CASSANDRA_HOME}/conf.
  *
  * Please customize the keyspace replication settings to better suit your clustering needs.
@@ -13,19 +13,7 @@ WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
 
 USE product_v2;
 
-DROP TABLE IF EXISTS product_by_timestamps;
-
-CREATE TABLE product_by_timestamps(
-	writedate text,
-	keyspace_name text,
-	table_name text,
-	partition_key text,
-	clustering_key text,
-	operation text,
-	division_ids text,
-	PRIMARY KEY ((writedate, keyspace_name,table_name) , partition_key)
-);
-
+DROP TABLE IF EXISTS product_by_maps;
 
 CREATE TABLE product_by_maps(
 	write_date text,

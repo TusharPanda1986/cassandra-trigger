@@ -28,7 +28,7 @@ dependencies {
 }
 
 test {
-    exclude '**/LogEntryStoreIntegrationTest.class'
+    exclude '**/MapLogEntryStoreIntegrationTest.class'
 }
 
 jar {
