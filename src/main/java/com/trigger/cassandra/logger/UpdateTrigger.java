@@ -67,9 +67,9 @@ public class UpdateTrigger implements ITrigger {
 				String clusterKeyData = "";
 				Unfiltered next = unfilteredIterator.next();
 				Object cluster = next.clustering();
-				Map<String, Object> dataMap = new HashMap<String, Object>();
+				Map<String, Object> dataMap = new HashMap<>();
 				if (cluster instanceof Clustering) {
-					clusterKeyData = processUpdatedRecords(partition, partitionKey, entry, cluster, dataMap);
+					clusterKeyData = processUpdatedRecords(partition, entry, cluster, dataMap);
 				}
 
 				if (cluster instanceof ClusteringBound) {
@@ -86,7 +86,7 @@ public class UpdateTrigger implements ITrigger {
 		return null;
 	}
 
-	private String processUpdatedRecords(Partition partition, String partitionKey, MapEntry entry, Object cluster,
+	private String processUpdatedRecords(Partition partition, MapEntry entry, Object cluster,
 			Map<String, Object> dataMap) {
 		String clusterKeyData;
 		Clustering clustering = (Clustering) cluster;
@@ -98,7 +98,7 @@ public class UpdateTrigger implements ITrigger {
 		if (deletion != null && !deletion.isLive()) {
 			entry.setOperation(Operation.delete);
 		} else {
-			processUpdates(partitionKey, entry, clusterKeyData, cells, dataMap);
+			processUpdates(entry, clusterKeyData, cells, dataMap);
 		}
 		return clusterKeyData;
 	}
@@ -115,8 +115,10 @@ public class UpdateTrigger implements ITrigger {
 
 	private String processDeletedRecords(Partition partition, MapEntry entry, String clusterKeyData, Object cluster,
 			Map<String, Object> dataMap) {
+
 		entry.setOperation(Operation.delete);
 		ClusteringBound bound = (ClusteringBound) cluster;
+
 		List<JSONObject> bounds = new ArrayList<>();
 		for (int i = 0; i < bound.size(); i++) {
 			String clusteringBound = partition.metadata().comparator.subtype(i).getString(bound.get(i));
@@ -129,7 +131,7 @@ public class UpdateTrigger implements ITrigger {
 		return clusterKeyData;
 	}
 
-	private void processUpdates(String partitionKeyData, MapEntry entry, String clusterKeyData, Iterable<Cell> cells,
+	private void processUpdates(MapEntry entry, String clusterKeyData, Iterable<Cell> cells,
 			Map<String, Object> dataMap) {
 		for (Cell cell : cells) {
 
@@ -139,7 +141,7 @@ public class UpdateTrigger implements ITrigger {
 			Object cellValue = cellValueType.compose(cell.value());
 			AbstractType<?> columnType = column.type;
 
-			populateLogEntries(entry, column.toString(), cell.value().array());
+			extractDivisionInfo(entry, column.toString(), cell.value().array());
 
 			if (cellValue != null) {
 
@@ -284,7 +286,11 @@ public class UpdateTrigger implements ITrigger {
 				entry.setChangedValues(new ObjectMapper().writeValueAsString(hashMap));
 			}
 
-			logEntryStore.create(entry, TTL);
+			if (Operation.save == entry.getOperation()) {
+				logEntryStore.create(entry, TTL);
+			} else {
+				logEntryStore.update(entry, TTL);
+			}
 		} catch (IOException e) {
 			logger.error("exception : ", e);
 		}
@@ -295,7 +301,7 @@ public class UpdateTrigger implements ITrigger {
 		return new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 	}
 
-	private void populateLogEntries(MapEntry entry, String column, byte[] cellValue) {
+	private void extractDivisionInfo(MapEntry entry, String column, byte[] cellValue) {
 		String value = new String(cellValue);
 		logger.debug(String.format("Column being processed : %s  and the corresponding value : %s ", column, value));
 		switch (column.trim().toLowerCase()) {

@@ -48,6 +48,18 @@ public class MapEntryStore extends AbstractCassandraStore {
 		execute(statement);
 	}
 
+	public void update(MapEntry entry, int ttl) {
+		Statement statement = QueryBuilder.update(getKeyspace(), getTable()).using(QueryBuilder.ttl(ttl))
+				.with(QueryBuilder.set(OPERATION, entry.getOperation().toString()))
+				.and(QueryBuilder.set(WRITETIME, entry.getWriteTime()))
+				.where(QueryBuilder.eq(WRITEDATE, entry.getWriteDate()))
+				.and(QueryBuilder.eq(KEYSPACE, entry.getKeyspaceName()))
+				.and(QueryBuilder.eq(TABLE, entry.getTableName())).and(QueryBuilder.eq(HASH_VALUE, entry.getHashCode()))
+				.setConsistencyLevel(ConsistencyLevel.LOCAL_QUORUM);
+
+		execute(statement);
+	}
+
 	public List<MapEntry> findByLogPartition(String writedate, String keyspaceName, String tableName) {
 		Statement statement = QueryBuilder.select().all().from(getKeyspace(), getTable())
 				.where(eq(WRITEDATE, writedate)).and(eq(KEYSPACE, keyspaceName)).and(eq(TABLE, tableName));

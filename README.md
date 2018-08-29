@@ -1,4 +1,4 @@
-This project was forked off from [here](https://github.com/felipead/cassandra-logger). Thanks to [felipead](https://github.com/felipead) for his contributions to opensource community
+This project was forked off from [here](https://github.com/felipead/cassandra-logger). Thanks to [felipead](https://github.com/felipead) for his contributions to open source community
 
 CASSANDRA TRIGGER
 ================
@@ -18,17 +18,17 @@ USAGE
 
 For each table you want to log, you need to create a trigger using the following CQL statement:
 
-    CREATE TRIGGER <trigger_name> ON <table> USING 'com.trigger.cassandra.logger.LogTrigger';
+    CREATE TRIGGER <trigger_name> ON <table> USING 'com.trigger.cassandra.logger.UpdateTrigger';
 
 For instance:
 
-    CREATE TRIGGER logger ON product USING 'com.trigger.cassandra.logger.LogTrigger';
+    CREATE TRIGGER logger ON product USING 'com.trigger.cassandra.logger.UpdateTrigger';
 
 If you want to disable this trigger, you can use:
 
     DROP TRIGGER logger ON product;
 
-Every `INSERT`, `UPDATE` or `DELETE` made on a table that has a log trigger enabled will be logged on table `product_by_timestamps`.
+Every `INSERT`, `UPDATE` or `DELETE` made on a table that has a log trigger enabled will be logged on table `product_by_maps`.
 
 You can customize the name and keyspace of the log table by editing file [`cassandra-logger.properties`](#customization).
 
@@ -84,9 +84,9 @@ To do this, load script [`create-log-schema.cql`](create-log-schema.cql) into CQ
 
 To make sure it was created correctly, enter CQL shell and run:
 
-    DESCRIBE TABLE product_v2_dev.product_by_timestamps
+    DESCRIBE TABLE product_v2.product_by_maps
 
-By default, the logger will use table `product_by_timestamps` and keyspace `product_v2_dev`. You can customize this by editing `cassandra-logger.properties`.
+By default, the logger will use table `product_by_maps` and keyspace `product_v2`. You can customize this by editing `cassandra-logger.properties`.
 
 CUSTOMIZATION
 -------------
@@ -162,14 +162,14 @@ AUTOMATED TESTS
 
     gradle test
 
-You need to have Cassandra running and the product_v2_dev schema created, otherwise tests will fail.
+You need to have Cassandra running and the product_v2 schema created, otherwise tests will fail.
 
 The integration test is disabled so inorder to execute the integration test, search for a file named :
 
-    LogEntryStoreIntegrationTest.java
+    MapLogEntryStoreIntegrationTest.java
     
 and execute it staandalone or else remove the following lines from build.gradle:
 
     test {
-    exclude '**/LogEntryStoreIntegrationTest.class'
+    exclude '**/MapLogEntryStoreIntegrationTest.class'
     }

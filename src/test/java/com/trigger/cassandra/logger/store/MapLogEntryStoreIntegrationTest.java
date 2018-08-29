@@ -29,28 +29,6 @@ public class MapLogEntryStoreIntegrationTest {
 				settings.getUsername(), settings.getPassword(), settings.getPort());
 	}
 
-	/*
-	 * @Test public void createAndRead() { Map<String, String> pk = new
-	 * HashMap<String, String>(); Map<String, String> ck = new HashMap<String,
-	 * String>();
-	 * 
-	 * pk.put("pk1", "2pk"); ck.put("ck1", "2ck");
-	 * 
-	 * DateTime date = new DateTime();
-	 * 
-	 * MapEntry created = buildLogEntry("2018-01-01", date.toDate(), pk, ck,
-	 * Operation.save, KEYSPACE, TABLE, "divs", "changed");
-	 * 
-	 * store.create(created, 180);
-	 * 
-	 * DateTime startDate = new DateTime(); startDate.minusMinutes(5);
-	 * 
-	 * DateTime endDate = new DateTime(); endDate.plusMinutes(5);
-	 * 
-	 * MapEntry read = store.read(created.getWriteDate(), KEYSPACE, TABLE,
-	 * startDate.toDate(), endDate.toDate()); assertThat(read, notNullValue());
-	 * assertThat(read, equalTo(created)); }
-	 */
 	@Test
 	public void createAndFind() throws InterruptedException {
 
